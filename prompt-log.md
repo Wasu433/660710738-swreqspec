@@ -36,3 +36,18 @@
 - เปลี่ยน Status จาก Draft v1 เป็น Draft v2 และปรับ Updated เป็น 2569-09-16
 
 ---
+
+## 2569-09-16 15:55 คำสั่ง: /plan
+
+- เครื่องมือ: Copilot ใน Codespaces
+- ผลลัพธ์: specs/001-booking/plan.md
+- ไฟล์อ้างอิง: specs/001-booking/spec.md
+
+### สรุปผลลัพธ์
+
+- สร้างแผนทางเทคนิคตามรูปแบบที่กำหนดใน prompt
+- เพิ่ม traceability ให้เห็นว่าทุกส่วนของ plan รองรับ spec ID ใดบ้าง
+- ครอบคลุม Technology, Data Model, API/UI, Constraints, Test Plan, Work Order, Open Questions
+- เหลือ Open Question ที่ยังไม่ตอบ: Q-01 เรื่อง “ช่วงเวลาใกล้เคียง”
+
+---
