@@ -70,3 +70,13 @@
 - เหตุผล: ทำให้มี task ตรวจเฉพาะสำหรับ AC/Constraint ที่ทีมระบุ และไม่ดำเนินงานที่ต้องพึ่งพารูปแบบเลขคิวซึ่งยังไม่มีคำตอบ
 
 ---
+
+## 2569-09-23 คำสั่ง: /implement T-01 specs/001-booking/tasks.md
+
+- ไฟล์ที่สร้างหรือแก้: `backend/app/db/models.py`, `backend/app/db/session.py`, `backend/app/db/migrations/001_init.py`, `backend/tests/conftest.py`
+- ผลการทดสอบ: focused schema assertion ผ่าน พบตาราง `slots`, `bookings`, `audit_logs` และไม่พบคอลัมน์ `national_id` ใน `bookings`
+- ผล `pytest -q`: ไม่พบ test ให้รัน (`no tests ran`) เนื่องจาก T-01 ระบุเฉพาะ `conftest.py` และยังไม่มีไฟล์ test แยกในขอบเขต task
+- สิ่งที่เกือบต้องเดาแต่ถามแทน: ไม่ได้กำหนดรูปแบบหรือวิธีออกเลขคิว; คง `queue_no` เป็น nullable ตาม plan เพื่อรอ Q-02
+- สถานะ T-01: เสร็จ รอทีมตรวจ
+
+---
