@@ -7,6 +7,7 @@ export const api = {
   async getSlots({ dateFrom, packageCode }) {
     const q = new URLSearchParams({ date_from: dateFrom, package_code: packageCode })
     const res = await fetch(`${BASE}/slots?${q}`)
+    if (!res.ok) throw new Error('ไม่สามารถโหลดช่วงเวลาว่างได้')
     return res.json()
   },
   async createBooking({ slotId }) {
