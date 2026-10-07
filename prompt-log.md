@@ -52,3 +52,33 @@
 - เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
 - ผลลัพธ์: เพิ่มแถวร่าง 3 แถวให้กับ AC-BKG-01 ใน specs/001-booking/test-cases.md โดยไม่เขียนโค้ด test เนื่องจากสถานะปัจจุบันยังเป็น "ร่าง" และต้องรอทีมตรวจแก้สถานะเป็น "ใช้ได้" ก่อน
 - หมายเหตุ: ส่วนที่ยังติด Q-02 คือ รูปแบบหมายเลขคิว จึงเขียนเป็น "(รอ Q-02)" ใน Then สำหรับแสดงหมายเลขคิว
+
+---
+
+## 2569-10-07 08:26 คำสั่ง: /testcases AC-BKG-01 specs/001-booking/
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: ตรวจพบว่า AC-BKG-01 ใน specs/001-booking/test-cases.md มีแถวสถานะ "ใช้ได้" แล้ว จึงเขียน test code ให้ครบ 3 แถวใน backend/tests/test_AC_BKG_01.py
+- test ที่เพิ่ม: TC-BKG-01-1 การจองสำเร็จ, TC-BKG-01-2 ขอบเขตที่นั่ง 1 ที่, TC-BKG-01-3 ปฏิเสธเมื่อเหลือ 0 ที่
+- ข้อค้นพบ: ระบบปัจจุบันยังไม่ปฏิเสธการจองเมื่อ remaining == 0 เนื่องจากเงื่อนไขใน backend/app/booking/service.py ตรวจแต่ `remaining < 0` และไม่ตรวจ `remaining <= 0`
+- ผลลัพธ์การรัน: `pytest backend/tests/test_AC_BKG_01.py -q` -> 1 failed, 2 passed; รายงานว่าฟีลที่ test_TC_BKG_01_3_slot_full_rejected ได้ status 201 แทน 409
+
+---
+
+## 2569-10-07 08:30 คำสั่ง: /verify specs/001-booking/
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: สร้าง `specs/001-booking/rtm.md` และตรวจความครอบคลุมตาม spec แบบไปข้างหน้าและย้อนกลับ
+- ผล test: backend `pytest -v` -> 5 passed, 1 failed; frontend `npm test -- --run` -> 1 passed
+- จำนวนแถวตามรอยไปข้างหน้า: ครบ 4, ยังไม่ถึง 9, รอ 0, ช่องโหว่ 2
+- ข้อค้นพบใหม่: F-001 ตัวเลขไม่ตรง spec ใน `DAYS_AHEAD = 14`, F-002 เดา Q-xx ใน `next_queue_no`, F-003 `remaining == 0` ยังให้จองได้
+
+---
+
+## 2569-10-07 08:39 คำสั่ง: แก้โค้ดตามข้อค้นพบ Out of scope และ slot-full
+
+- เครื่องมือ: Copilot ใน Codespaces (Agent, Auto)
+- ผลลัพธ์: ลบ endpoint `DELETE /bookings/{booking_id}` ออกจาก `backend/app/booking/router.py` และลบฟังก์ชัน `cancel_booking` ออกจาก `backend/app/booking/service.py` เพื่อให้ตรงกับ Out of scope UC-02
+- ผลลัพธ์เพิ่มเติม: ปรับเงื่อนไขใน `create_booking` จาก `remaining < 0` เป็น `remaining <= 0` เพื่อปฏิเสธการจองเมื่อช่วงเวลานั้นเต็ม ตาม AC-BKG-01 และ FR-BKG-03
+- ตรวจ: `cd backend && pytest -q` -> 6 passed
+- ภาพรวม: โค้ดมีการรับรองพื้นฐานบางส่วนแต่ยังไม่บรรลุ spec สำหรับการจองซ้ำวันเดียวกัน การเสนอ 3 ตัวเลือกเมื่อเต็ม การบันทึก audit log และระบบแจ้งเตือนซ้ำตาม NFR/FR ที่เหลือ
